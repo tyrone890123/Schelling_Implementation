@@ -258,7 +258,7 @@ class GridMap:
                              type:str="default",
                              satisfaction:float=.5,
                              target_iterations = 20
-                            ) -> str:
+                            ) -> None:
         
         """
         
@@ -342,8 +342,5 @@ class GridMap:
             
             print(f"Percent Satisfied: {satisfied_percent*100}")
             self.print_grid(map_copy)
-        
-        return 0
-        
     
 
