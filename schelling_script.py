@@ -1,5 +1,5 @@
 import argparse
-from utils.reader_utils import (GridMap,read_input)
+from utils.reader_utils import (GridMap,read_input,txt_to_grid)
 
 def get_args():
     args = argparse.ArgumentParser()
@@ -12,7 +12,10 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
     file_read = read_input(args.path)
-    subregion_read = read_input(args.sr_path)
     map = GridMap(file_read)
+    subregion_read = None
+    if args.sr_path:
+        subregion_read = read_input(args.sr_path)
+        gridified_subregion = txt_to_grid(subregion_read)
     
-    map.get_dissimilarity_index(subregion=subregion_read)
+    map.get_dissimilarity_index(gridified_subregion)
