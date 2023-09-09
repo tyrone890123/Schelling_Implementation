@@ -123,7 +123,7 @@ class GridMap:
         
         print(
             f"DISSIMILARITY INDEX: {dissimilarity_index}"
-            " or {dissimilarity_index:.3f}"
+            f" or {dissimilarity_index:.3f}"
         )
     
     def simulate_segregation(self,
