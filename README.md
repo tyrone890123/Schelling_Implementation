@@ -87,6 +87,8 @@ In this approach the for the schelling model is done by letting the unsatisfied 
 
 In this approach the schelling model is simulated by letting the unsatisfied people choose among the vacant spots left in the grid and picking the best possible spot in order to maximize the satisfaction of everyone without having to vacate a spot.
 
+>***It is important to note that this method takes longer for larger data grids as each occupant tries to relocate to their best spots***
+
 <p align="center">
 <img width="250" src="docs/simulation_results2.png"> 
 <img width="250" src="docs/simulation_results3.png"> 
