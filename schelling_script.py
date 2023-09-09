@@ -19,4 +19,4 @@ if __name__ == "__main__":
         gridified_subregion = txt_to_grid(subregion_read)
     
     map.get_dissimilarity_index(gridified_subregion)
-    map.simulate_segregation(type="relocate")
+    map.simulate_segregation()
