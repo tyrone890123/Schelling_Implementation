@@ -1,48 +1,6 @@
 import random
-from utils.custom_exceptions import (NotEqualMatrixError, 
-                                     NotInRegionError)
-
-def read_input(path:str):
-    x_len = None
-    raw_matrix = []
-    with open(path) as f:
-        for idx, line in enumerate(f.readlines()):
-            curr_line = line.replace('\n','')
-            if idx == 0:
-                x_len = len(curr_line)
-            if len(curr_line) != x_len:
-                raise NotEqualMatrixError("Please Input an NxN matrix")
-            else:
-                raw_matrix.append(curr_line)
-    return raw_matrix
-    
-def txt_to_grid(map: list):
-    grid = []
-    for y,row in enumerate(map):
-        grid_row = []
-        for x,occupant in enumerate(row):
-            grid_row.append(Occupant(occupant,(x,y)))
-        grid.append(grid_row)
-    return grid
-
-class Occupant:
-    def __init__(self, 
-                 race: str, 
-                 location: tuple):
-        self.race = race
-        self.location = location
-        
-    def delete(self):
-        self.race = " "
-    
-    def is_empty(self):
-        return self.race == " "
-    
-    def set_race(self, incoming):
-        self.race = incoming
-    
-    def copy(self):
-        return Occupant(self.race, self.location)
+from utils.custom_exceptions import (NotInRegionError)
+from utils.utils import (txt_to_grid)
         
 class GridMap:
     def __init__(self, 
