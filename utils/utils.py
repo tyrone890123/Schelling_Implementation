@@ -8,12 +8,20 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-def read_input(path:str):
+def read_input(path: str) -> list[str]:
+    """
+    
+    Function for reading file input to str list
+    
+    """
     x_len = None
     raw_matrix = []
     with open(path) as f:
         for idx, line in enumerate(f.readlines()):
+            # cant use strip() since it removes trailing white spaces
             curr_line = line.replace('\n','')
+            
+            # catches invalid matrix size
             if idx == 0:
                 x_len = len(curr_line)
             if len(curr_line) != x_len:
@@ -22,7 +30,12 @@ def read_input(path:str):
                 raw_matrix.append(curr_line)
     return raw_matrix
     
-def txt_to_grid(map: list):
+def txt_to_grid(map: list[str]) -> list[list[Occupant]]:
+    """
+    
+    Function for converting string list to 2d array of occupants
+    
+    """
     grid = []
     for y,row in enumerate(map):
         grid_row = []
