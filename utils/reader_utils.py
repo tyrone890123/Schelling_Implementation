@@ -37,6 +37,12 @@ class Occupant:
     
     def is_empty(self):
         return self.race == " "
+    
+    def set_race(self, incoming):
+        self.race = incoming
+    
+    def copy(self):
+        return Occupant(self.race, self.location)
         
 class GridMap:
     def __init__(self, 
@@ -84,8 +90,16 @@ class GridMap:
             sub_region[idx] = row[rand_x:rand_x+subregion_size+1]
         return sub_region
     
-    def copy(self):
-        return self.grid.copy()
+    def copy(self, grid = None):
+        if grid is None:
+            grid = self.grid
+        copy_grid = []
+        for row in grid:
+            holder = []
+            for occupant in row:
+                holder.append(occupant.copy())
+            copy_grid.append(holder)
+        return copy_grid
         
     def print_grid(self,grid=None):
         if grid is None:
@@ -168,22 +182,60 @@ class GridMap:
                 
         return float(similar/sides)
     
+    def _get_empty_spots(self, grid):
+        vacant_list = []
+        for row in grid:
+            for occupant in row:
+                if occupant.is_empty():
+                    vacant_list.append(occupant)
+
+        return vacant_list
+    
     def simulate_segregation(self,
                              type:str="default",
                              satisfaction:float=.5
                             ) -> str:
-        map_copy = []
+        map_copy = self.copy()
         
         if type == "default":
             for y,row in enumerate(self.grid):
-                holder = []
                 for x,occupant in enumerate(row):
                     neighbors = self._get_neighbors(occupant.location, self.grid)
-                    if self._compute_satisfaction(occupant, neighbors)>=satisfaction:
-                        holder.append(self.grid[y][x])
-                    else:
-                        holder.append(Occupant(" ",(x,y)))
-                map_copy.append(holder)       
+                    if self._compute_satisfaction(occupant, neighbors)<satisfaction:
+                        map_copy[y][x].delete()       
+            self.print_grid(map_copy)
+        if type == "relocate":
+            num_iterations = 0
+            while True:
+                num_dissatisfied = 0
+                for y,row in enumerate(map_copy):
+                    for x,occupant in enumerate(row):
+                        if not occupant.is_empty():
+                            neighbors = self._get_neighbors(occupant.location, map_copy)
+                            if self._compute_satisfaction(occupant, neighbors)<satisfaction:
+                                moving_locs = self._get_empty_spots(map_copy)
+                                best_score = (0,None)
+                                for loc in moving_locs:
+                                    temp = self.copy(map_copy)
+                                    temp[occupant.location[1]][occupant.location[0]].delete()
+                                    temp[loc.location[1]][loc.location[0]].set_race(occupant.race)
+                                    curr = temp[loc.location[1]][loc.location[0]]
+                                    neighbors = self._get_neighbors(curr.location, temp)
+                                    if best_score[0]<self._compute_satisfaction(curr, neighbors):
+                                        best_score = self._compute_satisfaction(curr, neighbors), loc.location
+                                        
+                                map_copy[best_score[1][1]][best_score[1][0]].set_race(occupant.race)
+                                map_copy[occupant.location[1]][occupant.location[0]].delete()
+                for y,row in enumerate(map_copy):
+                    for x,occupant in enumerate(row):
+                        neighbors = self._get_neighbors(occupant.location, map_copy)
+                        if self._compute_satisfaction(occupant, neighbors)<satisfaction:
+                            num_dissatisfied+=1
+                num_iterations+=1
+                
+                if not num_dissatisfied or num_iterations == 100:
+                    break
+            print(f"dissatisfied: {num_dissatisfied}")
             self.print_grid(map_copy)
         
         return 0
