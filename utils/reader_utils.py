@@ -119,7 +119,7 @@ class GridMap:
         races = list(self.population.keys())
         val1 = sub_region_population[races[0]]/self.population[races[0]]
         val2 = sub_region_population[races[1]]/self.population[races[1]]
-        dissimilarity_index = abs(val1-val2)
+        dissimilarity_index = abs(val1-val2)/2
         
         print(
             f"DISSIMILARITY INDEX: {dissimilarity_index}"
