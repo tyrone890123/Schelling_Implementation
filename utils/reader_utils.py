@@ -32,15 +32,18 @@ class Occupant:
         self.race = race
         self.location = location
         
+    def delete(self):
+        self.race = " "
+    
+    def is_empty(self):
+        return self.race == " "
+        
 class GridMap:
     def __init__(self, 
                  map: list):
         self.map = txt_to_grid(map)
         self.shape = (len(self.map[0]),len(self.map)) # (x-size, y-size)
         self.population = self._count_race()
-        
-    def copy(self):
-        return self.map
     
     def _grid_to_sep_str(self,map):
         if map is None:
@@ -54,25 +57,20 @@ class GridMap:
         if map is None:
             map = self.map
         return "\n".join(self._grid_to_sep_str(map))
-        
-    def print_grid(self,map=None):
-        if map is None:
-            map = self.map
-        print(self._grid_to_str(map))
-            
+    
     def _count_race(self,map=None):
         if map is None:
             map = self.map
         population = {}
         for row in map:
             for occupant in row:
-                if occupant.race != " ":
+                if not occupant.is_empty():
                     try:
                         population[occupant.race] += 1
                     except Exception as e:
                         population[occupant.race] = 1
         return population
-    
+
     def _get_random_subregion(self, subregion_size):
         rand_x = (random.randint(0,self.shape[0]-subregion_size))
         rand_y = (random.randint(0,self.shape[1]-subregion_size))
@@ -80,6 +78,14 @@ class GridMap:
         for idx,row in enumerate(sub_region):
             sub_region[idx] = row[rand_x:rand_x+subregion_size+1]
         return sub_region
+    
+    def copy(self):
+        return self.map
+        
+    def print_grid(self,map=None):
+        if map is None:
+            map = self.map
+        print(self._grid_to_str(map))
     
     def verify_subregion(self, sub_region):
         sub_region_shape = (len(sub_region[0]), len(sub_region))
@@ -124,7 +130,11 @@ class GridMap:
                              type:str="default",
                              satisfaction:float=.5
                             ) -> str:
+        map_copy = self.copy()
         
+        for row in map_copy:
+            for occupant in row:
+                print(occupant.race)
         
         return 0
         
