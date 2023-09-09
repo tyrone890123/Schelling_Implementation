@@ -40,6 +40,8 @@ if __name__ == "__main__":
     
     if SUB_REGION_PATH:
         subregion_read = txt_to_grid(read_input(SUB_REGION_PATH))
+    else:
+        subregion_read = None
     
     if SATISFACTION_SET:
         try:
