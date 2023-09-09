@@ -18,6 +18,9 @@ def get_args():
     args.add_argument("--satisfaction",
                       default="0.5",
                       help="input satisfaction percent in decimal")
+    args.add_argument("-n", "--num_iterations",
+                      default="20",
+                      help="input satisfaction percent in decimal")
     return args.parse_args()
 
 if __name__ == "__main__":
@@ -33,23 +36,32 @@ if __name__ == "__main__":
     
     SUB_REGION_PATH = args.sr_path
     SATISFACTION_SET = args.satisfaction
+    ITERATIONS = args.num_iterations
     
     if SUB_REGION_PATH:
-        subregion_read = txt_to_grid(read_input(args.sr_path))
+        subregion_read = txt_to_grid(read_input(SUB_REGION_PATH))
     
     if SATISFACTION_SET:
         try:
-            satisfaction = float(args.satisfaction)
+            satisfaction = float(SATISFACTION_SET)
             if satisfaction>1 or satisfaction<0:
                 raise InvalidPercentRange("Invalid value inputted")
         except ValueError:
             raise "Invalid input type"
-    else:
-        satisfaction = 0.5
+    
+    if ITERATIONS:
+        try:
+            iterations = float(ITERATIONS)
+            if satisfaction>1 or satisfaction<0:
+                raise InvalidPercentRange("Invalid value inputted")
+        except ValueError:
+            raise "Invalid input type"
     
     logging.info("GETTING INDEX OF DISSIMILARITY")
     grid.get_dissimilarity_index(subregion_read)
     print("\n")
     
     logging.info("SIMULATING SCHELLING SIMULATION")
-    grid.simulate_segregation(type=args.seg_type,satisfaction=satisfaction)
+    grid.simulate_segregation(type = args.seg_type,
+                              satisfaction = satisfaction,
+                              target_iterations = iterations)
