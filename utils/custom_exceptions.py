@@ -9,3 +9,7 @@ class NotInRegionError(Exception):
 class InvalidPercentRange(Exception):
     "Raised when inputting percent decimal over 0-1"
     pass
+
+class NoFileInputError(Exception):
+    "Raised when input file has no value"
+    pass

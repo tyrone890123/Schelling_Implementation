@@ -1,6 +1,7 @@
 import logging
 
-from utils.custom_exceptions import (NotEqualMatrixError)
+from utils.custom_exceptions import (NotEqualMatrixError,
+                                     NoFileInputError)
 from utils.Occupant import Occupant
 
 logging.basicConfig(
@@ -28,6 +29,8 @@ def read_input(path: str) -> list[str]:
                 raise NotEqualMatrixError("Please Input an NxN matrix")
             else:
                 raw_matrix.append(curr_line)
+    if not raw_matrix:
+        raise NoFileInputError("File inputted has no data")
     return raw_matrix
     
 def txt_to_grid(map: list[str]) -> list[list[Occupant]]:
