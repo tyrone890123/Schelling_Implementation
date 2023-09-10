@@ -27,7 +27,7 @@ The project aims to create a script that would recreate Schellings model, specif
 - To provide 2 methods of showcasing Schellings Model
 
 
-### Formulat for Index of Dissimilarity
+### Formula for Index of Dissimilarity
 
 This formula primarily focuses on measuring how even group A is from group B given a subregion. The formula is as follows:
 
