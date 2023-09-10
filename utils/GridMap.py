@@ -85,10 +85,10 @@ class GridMap:
         rand_y = (random.randint(0,self.shape[1]-subregion_size))
         
         #limit y axis to the rand_y value
-        sub_region = self.grid[rand_y:rand_y+subregion_size+1]
+        sub_region = self.grid[rand_y:rand_y+subregion_size]
         for idx,row in enumerate(sub_region):
             # for each row limit x to rand_x value
-            sub_region[idx] = row[rand_x:rand_x+subregion_size+1]
+            sub_region[idx] = row[rand_x:rand_x+subregion_size]
         return sub_region
     
     def _verify_subregion(self, 
@@ -268,8 +268,11 @@ class GridMap:
         map_copy = self.copy()
         
         if type == "default":
-            for y,row in enumerate(self.grid):
-                for x,occupant in enumerate(row):
+            for row in self.grid:
+                for occupant in row:
+                    x = occupant.location[0]
+                    y = occupant.location[1]
+                            
                     neighbors = self._get_neighbors((x,y), self.grid)
                     if (self._compute_satisfaction(occupant, neighbors) 
                         < satisfaction):
@@ -280,11 +283,12 @@ class GridMap:
             num_iterations = 0
             while True:
                 num_dissatisfied = 0
-                for y,row in enumerate(map_copy):
-                    for x,occupant in enumerate(row):
-                        
+                for row in map_copy:
+                    for occupant in row:
                         #skip if location is empty
                         if not occupant.is_empty():
+                            x = occupant.location[0]
+                            y = occupant.location[1]
                             
                             # verify if current occupant is dissatisfied
                             neighbors = self._get_neighbors((x,y), map_copy)
@@ -311,18 +315,24 @@ class GridMap:
                                     if (best_score[0] 
                                         < self._compute_satisfaction(curr, neighbors)):
                                         best_score = (
-                                            self._compute_satisfaction(curr, neighbors), 
+                                            self._compute_satisfaction(
+                                                curr, 
+                                                neighbors
+                                            ), 
                                             loc.location
                                         )
                                 
                                 # once the best loc is available we relocate
                                 best_loc = best_score[1]
-                                map_copy[best_loc[1]][best_loc[0]].set_race(occupant.race)
+                                map_copy[best_loc[1]][best_loc[0]]\
+                                    .set_race(occupant.race)
                                 map_copy[y][x].delete()
                 
                 # check number of dissatisfied in grid
-                for y,row in enumerate(map_copy):
-                    for x,occupant in enumerate(row):
+                for row in map_copy:
+                    for occupant in row:
+                        x = occupant.location[0]
+                        y = occupant.location[1]
                         neighbors = self._get_neighbors((x,y), map_copy)
                         if (self._compute_satisfaction(occupant, neighbors) 
                             < satisfaction):
